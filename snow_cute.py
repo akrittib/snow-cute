@@ -29,6 +29,8 @@ evey_speed = 2
 skier_y += evey_speed
 if skier_y > HEIGHT:
     skier_y = -100
+    
+skier_speed_x = 5
 
 eveys_compliment = random.choice(compliments)
 compliment_giver = 180 
@@ -37,6 +39,7 @@ font = pygame.font.Font("Sugar Fruit.otf", 36)
 if compliment_giver > 0:
     compliment_surface = font.render(eveys_compliment, True, (0, 0, 0))
     screen.blit(compliment_surface, (WIDTH // 2 - compliment_surface.get_width() // 2, 50))
+    compliment_giver -= 1
 
 
 running = True
@@ -44,7 +47,11 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_LEFT] and skier_x > 0:
+            skier_x -= skier_speed_x
+        if keys[pygame.K_RIGHT] and skier_x < WIDTH - 100:
+            skier_x += skier_speed_x
     screen.fill((225, 225, 225))  
     screen.blit(skier_img, (skier_x, skier_y))
     pygame.display.flip()
