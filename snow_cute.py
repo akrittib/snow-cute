@@ -12,7 +12,7 @@ while running:
         if event.type == pygame.QUIT:
             running = False
 
-    screen.fill((0, 0, 0)) 
+    screen.fill((225, 225, 225)) 
     pygame.display.flip()  
 pygame.quit()
 sys.exit()
