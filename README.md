@@ -1,2 +1,2 @@
 # snow-cute
-Ski Game for Evey 
+A ski game I made for Evan <3
