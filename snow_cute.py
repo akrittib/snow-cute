@@ -3,7 +3,7 @@ import sys
 import random 
 pygame.init()
 
-WIDTH, HEIGHT = 800, 600
+WIDTH, HEIGHT = 1200, 1000
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Snow Cute")
 
@@ -55,6 +55,14 @@ while running:
     if random.randint(1, 75) == 1: 
         tree_x = random.randint(0, WIDTH - 75)
         trees.append({"x": tree_x, "y" : - 75})
+    
+    tree_img = pygame.image.load("tree.png")
+    tree_img = pygame.transform.scale(tree_img, (50, 50))
+
+    for tree in trees:
+        tree["y"] += evey_speed
+        screen.blit(tree_img, (tree["x"], tree["y"]))
+
         
     screen.fill((225, 225, 225))  
     screen.blit(skier_img, (skier_x, skier_y))
