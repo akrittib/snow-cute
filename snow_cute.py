@@ -19,6 +19,7 @@ compliments = [
 compliment_giver = 0 
 eveys_compliment = ""
 
+trees = []
 
 skier_img = pygame.image.load("evey.png")
 skier_img = pygame.transform.scale(skier_img, (100, 100))
@@ -50,6 +51,10 @@ while running:
         
         eveys_compliment = random.choice(compliments)
         compliment_giver = 180 
+        
+    if random.randint(1, 75) == 1: 
+        tree_x = random.randint(0, WIDTH - 75)
+        trees.append({"x": tree_x, "y" : - 75})
         
     screen.fill((225, 225, 225))  
     screen.blit(skier_img, (skier_x, skier_y))
