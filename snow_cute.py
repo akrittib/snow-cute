@@ -26,9 +26,6 @@ skier_x = WIDTH // 2 - 30
 skier_y = 0
 
 evey_speed = 2 
-skier_y += evey_speed
-if skier_y > HEIGHT:
-    skier_y = -100
     
 skier_speed_x = 5
 
@@ -47,11 +44,16 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-        keys = pygame.key.get_pressed()
-        if keys[pygame.K_LEFT] and skier_x > 0:
-            skier_x -= skier_speed_x
-        if keys[pygame.K_RIGHT] and skier_x < WIDTH - 100:
-            skier_x += skier_speed_x
+            
+    keys = pygame.key.get_pressed()
+    if keys[pygame.K_LEFT] and skier_x > 0:
+        skier_x -= skier_speed_x
+    if keys[pygame.K_RIGHT] and skier_x < WIDTH - 100:
+        skier_x += skier_speed_x
+        
+    skier_y += evey_speed
+    if skier_y > HEIGHT:
+        skier_y = -100
     screen.fill((225, 225, 225))  
     screen.blit(skier_img, (skier_x, skier_y))
     pygame.display.flip()
