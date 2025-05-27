@@ -1,10 +1,43 @@
 import pygame 
 import sys 
+import random 
 pygame.init()
 
 WIDTH, HEIGHT = 800, 600
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Snow Cute")
+
+compliments = [
+    "Good Job Evey!", 
+    "You're the cutest <3",
+    "The most handsome skier I've ever seen 😘!",
+    "You're cooler than snow!",
+    "Go Evan, go!",
+    "#1 skier of all time! WOOOOWOOOO",
+]
+
+compliment_giver = 0 
+eveys_compliment = ""
+
+
+skier_img = pygame.image.load("evey.png")
+skier_img = pygame.transform.scale(skier_img, (100, 100))
+skier_x = WIDTH // 2 - 30 
+skier_y = 0
+
+evey_speed = 2 
+skier_y += evey_speed
+if skier_y > HEIGHT:
+    skier_y = -100
+
+eveys_compliment = random.choice(compliments)
+compliment_giver = 180 
+font = pygame.font.Font("Sugar Fruit.otf", 36)
+
+if compliment_giver > 0:
+    compliment_surface = font.render(eveys_compliment, True, (0, 0, 0))
+    screen.blit(compliment_surface, (WIDTH // 2 - compliment_surface.get_width() // 2, 50))
+
 
 running = True
 while running:
@@ -12,7 +45,10 @@ while running:
         if event.type == pygame.QUIT:
             running = False
 
-    screen.fill((225, 225, 225)) 
-    pygame.display.flip()  
+    screen.fill((225, 225, 225))  
+    screen.blit(skier_img, (skier_x, skier_y))
+    pygame.display.flip()
 pygame.quit()
 sys.exit()
+
+
