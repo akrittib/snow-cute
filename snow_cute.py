@@ -1,6 +1,7 @@
-import pygame 
-import sys 
-import random 
+import pygame
+import sys
+import random
+
 pygame.init()
 
 WIDTH = 1200
@@ -8,8 +9,9 @@ HEIGHT = 1000
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Snow Cute")
 
+
 compliments = [
-    "Good Job Evey!", 
+    "Good Job Evey!",
     "You're the cutest <3",
     "The most handsome skier I've ever seen 😘!",
     "You're cooler than snow!",
@@ -17,74 +19,106 @@ compliments = [
     "#1 skier of all time! WOOOOWOOOO",
 ]
 
-compliment_giver = 0 
-eveys_compliment = ""
+font = pygame.font.Font("Sugar Fruit.otf", 36)
+big_font = pygame.font.Font("Sugar Fruit.otf", 72)
 
-trees = []
+def reset_game():
+    global skier_x, skier_y, trees, compliment_giver, eveys_compliment, crashed
+    skier_x = WIDTH // 2 - 30
+    skier_y = 0
+    compliment_giver = 0
+    eveys_compliment = ""
+    trees = []
+    for _ in range(10):
+        tree_x = random.randint(0, WIDTH - 100)
+        tree_y = random.randint(-HEIGHT, HEIGHT)
+        trees.append({"x": tree_x, "y": tree_y})
+    crashed = False
 
-tree_pic = pygame.image.load("tree.png")
-tree_pic = pygame.transform.scale(tree_pic, (450, 450))
+
+tree_img = pygame.image.load("tree.png")
+tree_img = pygame.transform.scale(tree_img, (300, 300))
 
 skier_img = pygame.image.load("evey.png")
 skier_img = pygame.transform.scale(skier_img, (100, 100))
-skier_x = WIDTH // 2 - 30 
-skier_y = 0
 
-evey_speed = 2 
+
+evey_speed = 2
 skier_speed_x = 5
 
-font = pygame.font.Font("Sugar Fruit.otf", 36)
 
+reset_game()
 
-number = 0 
-while number <15: 
-    tree_x = random.randint(0, WIDTH - 100)
-    tree_y = random.randint(-HEIGHT,0)
-    trees.append({"x": tree_x, "y": tree_y})
-number +=1
 
 running = True
 while running:
+    screen.fill((225, 225, 225))
+    
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-            
+
     keys = pygame.key.get_pressed()
-    if keys[pygame.K_LEFT] and skier_x > 0:
-        if skier_x > 0:
-            skier_x = skier_x - skier_speed_x
-    if keys[pygame.K_RIGHT] and skier_x < WIDTH - 100:
-        if skier_x < HEIGHT:
-            skier_x += skier_speed_x + skier_speed_x
-            skier_y += evey_speed
-            
-    maybe = random.randint(1, 40)
-    if maybe == 3:
-        new_tree_x = random.randint(0, WIDTH - 100)
-        trees.append({"x": new_tree_x, "y": -100})
+
+    if not crashed:
+        if keys[pygame.K_LEFT] and skier_x > 0:
+            skier_x -= skier_speed_x
+        if keys[pygame.K_RIGHT] and skier_x < WIDTH - 100:
+            skier_x += skier_speed_x
+
+        skier_y += evey_speed
+
+        if skier_y > HEIGHT:
+            skier_y = -100
+            eveys_compliment = random.choice(compliments)
+            compliment_giver = 180
+
         
-    count = 0
-    while count < len(trees):
-        trees[count]["y"] = trees[count]["y"] + evey_speed
-        count += 1          
-        tree_x = random.randint(0, WIDTH - 75)
-        trees.append({"x": tree_x, "y" : - 75})
+        if random.randint(1, 60) == 1:
+            trees.append({"x": random.randint(0, WIDTH - 100), "y": -100})
+
+        
+        for t in trees:
+            t["y"] += evey_speed
+
+        
+        skier_rect = pygame.Rect(skier_x, skier_y, 100, 100)
+        for t in trees:
+            tree_rect = pygame.Rect(t["x"], t["y"], 100, 100)
+            if skier_rect.colliderect(tree_rect):
+                crashed = True
+                compliment_giver = 0
+                break
+
+    else:
+        crash_text = big_font.render("Evey crashed! 💥", True, (255, 0, 0))
+        screen.blit(crash_text, (WIDTH//2 - crash_text.get_width()//2, HEIGHT//2 - 100))
+
+        hint_text = font.render("Press R to restart or Q to quit", True, (0, 0, 0))
+        screen.blit(hint_text, (WIDTH//2 - hint_text.get_width()//2, HEIGHT//2 + 20))
+
+        if keys[pygame.K_r]:
+            reset_game()
+        if keys[pygame.K_q]:
+            running = False
+
     
-    screen.fill((225, 225, 225))  
+    for t in trees:
+        screen.blit(tree_img, (t["x"], t["y"]))
 
-    if random.randint(1, 150) == 77:
-        eveys_compliment = random.choice(compliments)
-        compliment_giver = 180 
+    
+    screen.blit(skier_img, (skier_x, skier_y))
 
+  
     if compliment_giver > 0:
-        compliment_surface = font.render(eveys_compliment, True, (0, 0, 0))
-        msg_x = WIDTH // 2 - compliment_surface.get_width() // 2
-        msg_y = 50
-        screen.blit(compliment_surface, (msg_x, msg_y))
-        compliment_giver = compliment_giver - 1 
-        
+        comp_surface = font.render(eveys_compliment, True, (0, 0, 0))
+        screen.blit(comp_surface, (WIDTH // 2 - comp_surface.get_width() // 2, 50))
+        compliment_giver -= 1
+
     pygame.display.flip()
+
 pygame.quit()
 sys.exit()
+
 
 
